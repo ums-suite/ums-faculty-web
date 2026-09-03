@@ -4,7 +4,7 @@ The faculty portal — attendance, grading, course materials, leave, and researc
 
 - **Full spec:** [`ums-platform/docs/client/ums-faculty-web/requirement-spec.md`](https://github.com/ums-suite/ums-platform/blob/main/docs/client/ums-faculty-web/requirement-spec.md)
 - **Design system:** [`ums-design-system`](https://github.com/ums-suite/ums-design-system) · **API contracts:** [`ums-shared`](https://github.com/ums-suite/ums-shared)
-- **Tech:** Angular (latest LTS), Bengali/English i18n
+- **Tech:** Angular 22, Bengali/English i18n
 
 ## Status
 
