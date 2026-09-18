@@ -94,9 +94,75 @@ export const BN_TRANSLATIONS: TranslationDictionary = {
   'attendance.history.title': 'উপস্থিতির ইতিহাস — {{name}}',
   'attendance.history.empty': 'এখনো কোনো সেশন রেকর্ড হয়নি।',
 
+  'grading.title': 'গ্রেডিং',
+  'grading.status.draft': 'খসড়া',
+  'grading.status.submitted': 'জমা দেওয়া হয়েছে',
+  'grading.status.underReview': 'পর্যালোচনাধীন',
+  'grading.status.approved': 'অনুমোদিত',
+  'grading.status.published': 'প্রকাশিত',
+  'grading.status.archived': 'সংরক্ষণাগারভুক্ত',
+  'grading.selfReview.notice':
+    'আপনি এই কোর্সের প্রশিক্ষক। বিভাগীয় প্রধান হিসেবেও আপনাকে একটি স্পষ্ট পর্যালোচনা পদক্ষেপ নিতে হবে — এটি কখনো স্বয়ংক্রিয়ভাবে অনুমোদিত হয় না।',
+  'grading.table.ariaLabel': 'গ্রেড এন্ট্রি টেবিল',
+  'grading.table.student': 'শিক্ষার্থী',
+  'grading.table.total': 'মোট',
+  'grading.table.save': 'সংরক্ষণ করুন',
+  'grading.error.notANumber': 'একটি সংখ্যা লিখুন।',
+  'grading.error.belowMinimum': 'নম্বর ঋণাত্মক হতে পারে না।',
+  'grading.error.aboveMaximum': 'নম্বর ১০০ এর বেশি হতে পারে না।',
+  'grading.error.submitFailed': 'এই নম্বর সংরক্ষণ করা যায়নি। এটি ইতিমধ্যে লক করা থাকতে পারে।',
+  'grading.error.transitionFailed':
+    'এই পদক্ষেপ সম্পন্ন করা যায়নি — ব্যাচটি হয়তো ভিন্ন অবস্থায় আছে।',
+  'grading.error.correctionFailed': 'এই সংশোধন জমা দেওয়া যায়নি। আবার চেষ্টা করুন।',
+  'grading.discrepancy.title':
+    'এই নম্বর জমার পর একটি বা একাধিক অ্যাসেসমেন্ট উপাদান পরিবর্তিত হয়েছে — এগিয়ে যাওয়ার আগে পর্যালোচনা করুন।',
+  'grading.discrepancy.removed': 'এই জমায় ব্যবহৃত একটি অ্যাসেসমেন্ট উপাদান আর নেই।',
+  'grading.actions.submit': 'পর্যালোচনার জন্য জমা দিন',
+  'grading.actions.lock': 'পর্যালোচনার জন্য লক করুন',
+  'grading.actions.reject': 'প্রত্যাখ্যান করুন',
+  'grading.actions.approve': 'অনুমোদন করুন',
+  'grading.actions.publish': 'প্রকাশ করুন',
+  'grading.actions.archive': 'সংরক্ষণাগারে পাঠান',
+  'grading.confirm.submit.title': 'গ্রেড পর্যালোচনার জন্য জমা দেবেন?',
+  'grading.confirm.submit.description':
+    'এতে প্রতিটি এন্ট্রি করা, অসংরক্ষিত নম্বর একাডেমিকে পাঠানো হবে। বিভাগীয় প্রধান লক না করা পর্যন্ত আপনি সম্পাদনা করতে পারবেন।',
+  'grading.confirm.lock.title': 'এই গ্রেড ব্যাচ লক করবেন?',
+  'grading.confirm.lock.description':
+    'লক করলে এই কোর্সের জন্য শিক্ষকের সম্পাদনা সম্পূর্ণরূপে বন্ধ হয়ে যাবে।',
+  'grading.confirm.reject.title': 'এই গ্রেড ব্যাচ প্রত্যাখ্যান করবেন?',
+  'grading.confirm.reject.description':
+    'এটি ব্যাচটি পুনরায় প্রবেশের জন্য শিক্ষকের কাছে ফেরত পাঠাবে।',
+  'grading.confirm.approve.title': 'এই গ্রেড ব্যাচ অনুমোদন করবেন?',
+  'grading.confirm.approve.description':
+    'এটি ব্যাচটিকে শিক্ষার্থীদের কাছে প্রকাশের এক ধাপ কাছে নিয়ে যাবে।',
+  'grading.confirm.publish.title': 'এই ফলাফল প্রকাশ করবেন?',
+  'grading.confirm.publish.description':
+    'প্রকাশিত ফলাফল শিক্ষার্থীদের কাছে দৃশ্যমান হবে। এই পদক্ষেপ নিরীক্ষিত হয়।',
+  'grading.confirm.archive.title': 'এই গ্রেড ব্যাচ সংরক্ষণাগারে পাঠাবেন?',
+  'grading.confirm.archive.description':
+    'সংরক্ষণাগারভুক্ত করলে এটি একটি সমাপ্ত ঐতিহাসিক রেকর্ড হিসেবে চিহ্নিত হবে।',
+  'grading.roster.empty.title': 'রোস্টার অনুপলব্ধ',
+  'grading.roster.empty.description':
+    'এই কোর্সের ভর্তিকৃত শিক্ষার্থীদের তালিকা করার কোনো এন্ডপয়েন্ট এখনো ums-core এ নেই — একটি নিশ্চিত ব্যাকএন্ড ঘাটতি। প্রকৃত রোস্টার লোড হওয়া মাত্র এন্ট্রি কাজ করবে।',
+  'grading.distribution.title': 'ক্লাস বণ্টন',
+  'grading.distribution.average': 'ক্লাস গড়: {{average}}%',
+  'grading.distribution.empty': 'লাইভ ক্লাস গড় এবং বণ্টন দেখতে নম্বর প্রবেশ করান।',
+  'grading.distribution.students': 'শিক্ষার্থী',
+  'grading.correction.request': 'সংশোধনের অনুরোধ করুন',
+  'grading.correction.title': 'সংশোধনের অনুরোধ — {{name}}',
+  'grading.correction.intro':
+    'এই ফলাফল ইতিমধ্যে প্রকাশিত। নিচে একটি নতুন মান প্রস্তাব করুন — পূর্বের মান ধরে রাখা হয় এবং পাশাপাশি দেখানো হয়, কখনো নীরবে পরিবর্তিত হয় না।',
+  'grading.correction.previous': 'পূর্বে প্রকাশিত',
+  'grading.correction.reasonLabel': 'সংশোধনের কারণ (আবশ্যক)',
+  'grading.correction.review': 'সংশোধন পর্যালোচনা করুন',
+  'grading.correction.reviewIntro':
+    'এই সংশোধন নিশ্চিত করুন — নিচের পার্থক্য ঠিক কী পরিবর্তিত হবে তা দেখায়।',
+  'grading.correction.confirm': 'সংশোধন জমা দিন',
+
   'common.retry': 'আবার চেষ্টা করুন',
   'common.cancel': 'বাতিল',
   'common.close': 'বন্ধ করুন',
+  'common.back': 'পেছনে',
   'common.save': 'সংরক্ষণ করুন',
   'common.loading': 'লোড হচ্ছে…',
   'common.view': 'দেখুন',

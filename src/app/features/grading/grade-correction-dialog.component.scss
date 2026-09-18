@@ -1,0 +1,57 @@
+.grade-correction-dialog__intro {
+  color: var(--color-text-muted);
+  margin-block-end: var(--space-3);
+}
+
+.grade-correction-dialog__grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-block-end: var(--space-3);
+}
+
+.grade-correction-dialog__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-weight: 600;
+}
+
+.grade-correction-dialog__previous {
+  font-weight: 400;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.grade-correction-dialog__reason {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-weight: 600;
+}
+
+.grade-correction-dialog__diff {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin-block-end: var(--space-3);
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+}
+
+.grade-correction-dialog__reason-readback {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.grade-correction-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}

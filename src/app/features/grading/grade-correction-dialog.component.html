@@ -1,0 +1,90 @@
+<ums-modal
+  [open]="open()"
+  [title]="'grading.correction.title' | translate: { name: row()?.name ?? '' }"
+  (closed)="onClose()"
+>
+  @if (!reviewing()) {
+    <p class="grade-correction-dialog__intro">{{ 'grading.correction.intro' | translate }}</p>
+    <div class="grade-correction-dialog__grid">
+      @for (assessment of assessments(); track assessment.assessmentId) {
+        <ums-form-field
+          #scoreField="umsFormField"
+          class="grade-correction-dialog__field"
+          [label]="assessment.name"
+          [hint]="
+            ('grading.correction.previous' | translate) +
+            ': ' +
+            (row()?.cells?.[assessment.assessmentId]?.savedValue ?? '—')
+          "
+        >
+          <ums-input
+            type="number"
+            size="sm"
+            [id]="scoreField.controlId()"
+            [ariaDescribedBy]="scoreField.describedBy()"
+            [min]="0"
+            [max]="100"
+            [value]="draftValue(assessment.assessmentId)"
+            (valueChange)="onDraftInput(assessment.assessmentId, $event)"
+          />
+        </ums-form-field>
+      }
+    </div>
+    <ums-form-field
+      #reasonField="umsFormField"
+      [label]="'grading.correction.reasonLabel' | translate"
+      [required]="true"
+    >
+      <ums-textarea
+        [id]="reasonField.controlId()"
+        [ariaDescribedBy]="reasonField.describedBy()"
+        [rows]="3"
+        [value]="reason()"
+        (valueChange)="reason.set($event)"
+      />
+    </ums-form-field>
+  } @else if (store.pendingCorrection(); as pending) {
+    <p class="grade-correction-dialog__intro">{{ 'grading.correction.reviewIntro' | translate }}</p>
+    <ul class="grade-correction-dialog__diff">
+      @for (assessment of assessments(); track assessment.assessmentId) {
+        <li>
+          <span>{{ assessment.name }}</span>
+          <ums-badge variant="neutral">{{
+            pending.previousScores[assessment.assessmentId] ?? 0
+          }}</ums-badge>
+          <span aria-hidden="true">&rarr;</span>
+          <ums-badge variant="warning">{{
+            pending.proposedScores[assessment.assessmentId] ?? 0
+          }}</ums-badge>
+        </li>
+      }
+    </ul>
+    <p class="grade-correction-dialog__reason-readback">
+      {{ 'grading.correction.reasonLabel' | translate }}: {{ pending.reason }}
+    </p>
+  }
+
+  @if (!reviewing()) {
+    <ng-container umsModalFooter>
+      <div class="grade-correction-dialog__footer">
+        <ums-button variant="ghost" (click)="onClose()">{{
+          'common.cancel' | translate
+        }}</ums-button>
+        <ums-button variant="primary" [disabled]="!reason().trim()" (click)="onReview()">{{
+          'grading.correction.review' | translate
+        }}</ums-button>
+      </div>
+    </ng-container>
+  } @else {
+    <ng-container umsModalFooter>
+      <div class="grade-correction-dialog__footer">
+        <ums-button variant="ghost" (click)="onBackToEdit()">{{
+          'common.back' | translate
+        }}</ums-button>
+        <ums-button variant="danger" (click)="onConfirm()">{{
+          'grading.correction.confirm' | translate
+        }}</ums-button>
+      </div>
+    </ng-container>
+  }
+</ums-modal>

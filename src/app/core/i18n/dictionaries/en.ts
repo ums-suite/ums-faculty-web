@@ -99,9 +99,76 @@ export const EN_TRANSLATIONS: TranslationDictionary = {
   'attendance.history.title': 'Attendance history — {{name}}',
   'attendance.history.empty': 'No recorded sessions yet.',
 
+  'grading.title': 'Grading',
+  'grading.status.draft': 'Draft',
+  'grading.status.submitted': 'Submitted',
+  'grading.status.underReview': 'Under Review',
+  'grading.status.approved': 'Approved',
+  'grading.status.published': 'Published',
+  'grading.status.archived': 'Archived',
+  'grading.selfReview.notice':
+    'You are the instructor for this course. As Department Head, you still need to take an explicit review action -- it is never auto-approved.',
+  'grading.table.ariaLabel': 'Grade entry table',
+  'grading.table.student': 'Student',
+  'grading.table.total': 'Total',
+  'grading.table.save': 'Save',
+  'grading.error.notANumber': 'Enter a number.',
+  'grading.error.belowMinimum': 'A mark cannot be negative.',
+  'grading.error.aboveMaximum': 'A mark cannot exceed 100.',
+  'grading.error.submitFailed':
+    'This mark could not be saved. It may already be locked for review.',
+  'grading.error.transitionFailed':
+    'This action could not be completed -- the batch may already be in a different state.',
+  'grading.error.correctionFailed': 'This correction could not be submitted. Please try again.',
+  'grading.discrepancy.title':
+    'One or more Assessment components changed since these grades were submitted -- review before proceeding.',
+  'grading.discrepancy.removed':
+    'An Assessment component used in this submission no longer exists.',
+  'grading.actions.submit': 'Submit for review',
+  'grading.actions.lock': 'Lock for review',
+  'grading.actions.reject': 'Reject',
+  'grading.actions.approve': 'Approve',
+  'grading.actions.publish': 'Publish',
+  'grading.actions.archive': 'Archive',
+  'grading.confirm.submit.title': 'Submit grades for review?',
+  'grading.confirm.submit.description':
+    'This sends every entered, unsaved mark to Academic. You can still edit until a Department Head locks this batch.',
+  'grading.confirm.lock.title': 'Lock this grade batch?',
+  'grading.confirm.lock.description':
+    'Locking ends Faculty editing entirely for this CourseOffering -- no further mark changes will be possible.',
+  'grading.confirm.reject.title': 'Reject this grade batch?',
+  'grading.confirm.reject.description': 'This returns the batch to Faculty for re-entry.',
+  'grading.confirm.approve.title': 'Approve this grade batch?',
+  'grading.confirm.approve.description':
+    'This moves the batch one step closer to being published to students.',
+  'grading.confirm.publish.title': 'Publish these results?',
+  'grading.confirm.publish.description':
+    'Published results become visible to students. This action is audited.',
+  'grading.confirm.archive.title': 'Archive this grade batch?',
+  'grading.confirm.archive.description':
+    'Archiving marks this batch as a closed historical record.',
+  'grading.roster.empty.title': 'Roster unavailable',
+  'grading.roster.empty.description':
+    'ums-core has no endpoint yet to list this course’s enrolled students -- a confirmed, flagged backend gap. Entry will work the instant a real roster loads.',
+  'grading.distribution.title': 'Class distribution',
+  'grading.distribution.average': 'Class average: {{average}}%',
+  'grading.distribution.empty': 'Enter marks to see a live class average and distribution preview.',
+  'grading.distribution.students': 'Students',
+  'grading.correction.request': 'Request correction',
+  'grading.correction.title': 'Request a correction — {{name}}',
+  'grading.correction.intro':
+    'This result is already Published. Propose a new value below -- the prior value is retained and shown alongside it, never silently overwritten.',
+  'grading.correction.previous': 'Previously published',
+  'grading.correction.reasonLabel': 'Reason for correction (required)',
+  'grading.correction.review': 'Review correction',
+  'grading.correction.reviewIntro':
+    'Confirm this correction -- the diff below shows exactly what will change.',
+  'grading.correction.confirm': 'Submit correction',
+
   'common.retry': 'Retry',
   'common.cancel': 'Cancel',
   'common.close': 'Close',
+  'common.back': 'Back',
   'common.save': 'Save',
   'common.loading': 'Loading…',
   'common.view': 'View',
