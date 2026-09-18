@@ -4,9 +4,14 @@ import { Observable } from 'rxjs';
 import { ProvisionalModuleApiBase } from '../http/provisional-module-api.base';
 import type {
   AttendanceSessionDto,
+  CorrectGradeRequest,
   CourseOfferingDto,
   EnrollmentDto,
+  GradeDto,
   MarkAttendanceRequest,
+  RejectGradeBatchRequest,
+  ResultPublicationDto,
+  SubmitGradeRequest,
 } from './academic.types';
 
 /**
@@ -58,6 +63,81 @@ export class AcademicApi extends ProvisionalModuleApiBase {
   markAttendance(request: MarkAttendanceRequest): Observable<AttendanceSessionDto> {
     return this.normalizeErrors(
       this.http.post<AttendanceSessionDto>(this.apiUrl('academic/attendance'), request),
+    );
+  }
+
+  /**
+   * `POST /api/v1/academic/grades` (confirmed, `GradeEndpoints.cs`, `academic.grade.enter`) --
+   * submits/resubmits one Enrollment's Assessment scores. Accepted only while the CourseOffering's
+   * ResultPublication is `Draft`/`Calculated` server-side; rejected with `grade.already_locked`
+   * once a Department Head has locked the batch (invariant §8.2, enforced authoritatively here,
+   * never only by this app's own UI).
+   */
+  submitGrade(request: SubmitGradeRequest): Observable<GradeDto> {
+    return this.normalizeErrors(this.http.post<GradeDto>(this.apiUrl('academic/grades'), request));
+  }
+
+  /**
+   * `POST /api/v1/academic/grades/{id}/correct` (confirmed, `academic.grade.correct`) -- FWEB-19's
+   * controlled correction workflow. Only accepted while the batch is `Published`
+   * (`grade.correction_requires_published`); re-enters the state machine at `Verified`.
+   */
+  correctGrade(gradeId: string, request: CorrectGradeRequest): Observable<GradeDto> {
+    return this.normalizeErrors(
+      this.http.post<GradeDto>(this.apiUrl(`academic/grades/${gradeId}/correct`), request),
+    );
+  }
+
+  /** `POST /api/v1/academic/results/{courseOfferingId}/lock` (confirmed, `academic.grade.lock`) -- the Department Head review-lock step, `Calculated` -> `Verified`. */
+  lockResultBatch(courseOfferingId: string): Observable<ResultPublicationDto> {
+    return this.normalizeErrors(
+      this.http.post<ResultPublicationDto>(
+        this.apiUrl(`academic/results/${courseOfferingId}/lock`),
+        {},
+      ),
+    );
+  }
+
+  /** `POST /api/v1/academic/results/{courseOfferingId}/reject` (confirmed, `academic.grade.lock`) -- returns the batch to Faculty for re-entry. */
+  rejectResultBatch(
+    courseOfferingId: string,
+    request: RejectGradeBatchRequest,
+  ): Observable<ResultPublicationDto> {
+    return this.normalizeErrors(
+      this.http.post<ResultPublicationDto>(
+        this.apiUrl(`academic/results/${courseOfferingId}/reject`),
+        request,
+      ),
+    );
+  }
+
+  /** `POST /api/v1/academic/results/{courseOfferingId}/approve` (confirmed, `academic.result.approve`), `Verified` -> `Approved`. */
+  approveResultBatch(courseOfferingId: string): Observable<ResultPublicationDto> {
+    return this.normalizeErrors(
+      this.http.post<ResultPublicationDto>(
+        this.apiUrl(`academic/results/${courseOfferingId}/approve`),
+        {},
+      ),
+    );
+  }
+
+  /** `POST /api/v1/academic/results/{courseOfferingId}/publish` (confirmed, `academic.result.publish`), `Approved` -> `Published`. */
+  publishResultBatch(courseOfferingId: string): Observable<ResultPublicationDto> {
+    return this.normalizeErrors(
+      this.http.post<ResultPublicationDto>(
+        this.apiUrl(`academic/results/${courseOfferingId}/publish`),
+        {},
+      ),
+    );
+  }
+
+  /** `POST /api/v1/academic/results/{courseOfferingId}/archive` (confirmed, `academic.result.publish`), `Published` -> `Archived`. */
+  archiveResultBatch(courseOfferingId: string): Observable<ResultPublicationDto> {
+    return this.normalizeErrors(
+      this.http.post<ResultPublicationDto>(
+        this.apiUrl(`academic/results/${courseOfferingId}/archive`),
+        {},
+      ),
     );
   }
 }

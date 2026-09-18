@@ -1,0 +1,132 @@
+<div class="grading-page">
+  <div class="grading-page__header">
+    <h1>{{ 'grading.title' | translate }}</h1>
+    <ums-badge [variant]="store.statusBadgeVariant()">{{
+      store.statusBannerKey() | translate
+    }}</ums-badge>
+  </div>
+
+  @if (store.isSelfReview()) {
+    <p class="grading-page__notice">{{ 'grading.selfReview.notice' | translate }}</p>
+  }
+
+  @if (store.lockedElsewhereNotice(); as notice) {
+    <div class="grading-page__banner grading-page__banner--warning">
+      <strong>{{ notice.title }}</strong>
+      <p>{{ notice.body }}</p>
+      <ums-button variant="ghost" size="sm" (click)="store.acknowledgeLockedElsewhere()">{{
+        'common.close' | translate
+      }}</ums-button>
+    </div>
+  }
+
+  @if (store.assessmentDiscrepancy(); as discrepancy) {
+    <div class="grading-page__banner grading-page__banner--danger">
+      <strong>{{ 'grading.discrepancy.title' | translate }}</strong>
+      <ul>
+        @for (change of discrepancy.changedWeights; track change.assessmentId) {
+          <li>
+            {{ change.name }}: {{ change.previousWeight * 100 }}% &rarr;
+            {{ change.currentWeight * 100 }}%
+          </li>
+        }
+        @for (removedId of discrepancy.removedAssessmentIds; track removedId) {
+          <li>{{ 'grading.discrepancy.removed' | translate }}</li>
+        }
+      </ul>
+    </div>
+  }
+
+  <div class="grading-page__actions">
+    @if (store.canEditMarks()) {
+      <ums-button
+        variant="primary"
+        [disabled]="!store.hasUnsavedChanges()"
+        (click)="startConfirm('submit')"
+        >{{ 'grading.actions.submit' | translate }}</ums-button
+      >
+    }
+    @if (isDepartmentHead()) {
+      @if (store.canLock()) {
+        <ums-button variant="primary" (click)="startConfirm('lock')">{{
+          'grading.actions.lock' | translate
+        }}</ums-button>
+      }
+      @if (store.canReject()) {
+        <ums-button variant="danger" (click)="startConfirm('reject')">{{
+          'grading.actions.reject' | translate
+        }}</ums-button>
+      }
+      @if (store.canApprove()) {
+        <ums-button variant="primary" (click)="startConfirm('approve')">{{
+          'grading.actions.approve' | translate
+        }}</ums-button>
+      }
+      @if (store.canPublish()) {
+        <ums-button variant="primary" (click)="startConfirm('publish')">{{
+          'grading.actions.publish' | translate
+        }}</ums-button>
+      }
+      @if (store.canArchive()) {
+        <ums-button variant="secondary" (click)="startConfirm('archive')">{{
+          'grading.actions.archive' | translate
+        }}</ums-button>
+      }
+    }
+  </div>
+
+  @if (store.lastActionError(); as errorKey) {
+    <p class="grading-page__error">{{ errorKey }}</p>
+  }
+
+  @if (store.rows().length === 0) {
+    <ums-empty-state
+      [title]="'grading.roster.empty.title' | translate"
+      [description]="'grading.roster.empty.description' | translate"
+    />
+  } @else {
+    <app-grade-entry-table
+      [assessments]="store.assessments()"
+      [rows]="store.rows()"
+      [previews]="store.rowPreview()"
+      [editable]="store.canEditMarks()"
+      [canRequestCorrection]="store.canRequestCorrection()"
+      (cellChange)="onCellChange($event)"
+      (submitRow)="onSubmitRow($event)"
+      (requestCorrection)="onOpenCorrection($event)"
+    />
+  }
+
+  <section class="grading-page__distribution">
+    <h2>{{ 'grading.distribution.title' | translate }}</h2>
+    @if (store.classDistribution().average !== null) {
+      <p>
+        {{
+          'grading.distribution.average'
+            | translate: { average: store.classDistribution().average! }
+        }}
+      </p>
+      <ums-bar-chart
+        [categories]="distributionCategories()"
+        [series]="distributionSeries()"
+        height="220px"
+      />
+    } @else {
+      <p class="grading-page__notice">{{ 'grading.distribution.empty' | translate }}</p>
+    }
+  </section>
+
+  <app-grade-correction-dialog
+    [row]="correctionRow()"
+    [assessments]="store.assessments()"
+    (closed)="onCloseCorrection()"
+  />
+
+  <ums-confirmation-dialog
+    [open]="confirmingAction() !== null"
+    [title]="confirmTitleKey(confirmingAction()) | translate"
+    [description]="confirmDescriptionKey(confirmingAction()) | translate"
+    (confirmed)="onConfirmed($event)"
+    (cancelled)="onCancelConfirm()"
+  />
+</div>

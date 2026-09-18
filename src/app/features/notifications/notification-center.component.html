@@ -1,0 +1,42 @@
+<div class="notification-center">
+  <div class="notification-center__header">
+    <h1>{{ 'notifications.title' | translate }}</h1>
+    @if (store.hasUnread()) {
+      <ums-button variant="ghost" size="sm" (click)="onMarkAllRead()">{{
+        'notifications.markAllRead' | translate
+      }}</ums-button>
+    }
+  </div>
+
+  @if (store.error(); as errorKey) {
+    <p class="notification-center__error">{{ errorKey | translate }}</p>
+  }
+
+  @if (store.notifications().length === 0) {
+    <ums-empty-state
+      [title]="'notifications.empty.title' | translate"
+      [description]="'notifications.empty.description' | translate"
+    />
+  } @else {
+    <ul class="notification-center__list">
+      @for (notification of store.notifications(); track notification.id) {
+        <li
+          class="notification-center__item"
+          [class.notification-center__item--unread]="!notification.isRead"
+        >
+          <div class="notification-center__item-body">
+            <span class="notification-center__item-title">{{ notification.title }}</span>
+            <span class="notification-center__item-text">{{ notification.body }}</span>
+            <span class="notification-center__item-time">{{ notification.createdAt }}</span>
+          </div>
+          @if (!notification.isRead) {
+            <ums-badge variant="info" size="sm">{{ 'notifications.unread' | translate }}</ums-badge>
+            <ums-button variant="ghost" size="sm" (click)="onMarkRead(notification.id)">{{
+              'notifications.markRead' | translate
+            }}</ums-button>
+          }
+        </li>
+      }
+    </ul>
+  }
+</div>

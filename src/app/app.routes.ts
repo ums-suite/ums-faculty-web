@@ -16,8 +16,9 @@ const placeholder = () =>
  * permission surface" -- best-effort client-side UX, never the real trust boundary) and renders
  * inside the shared {@link AppShellComponent} (top bar + nav).
  *
- * Dashboard (FWEB-9) and Attendance (FWEB-10 through FWEB-16) are this pass's actual scope; every
- * other leaf is {@link FeaturePlaceholderComponent} until its own ticket lands (FWEB-17+).
+ * Every feature area (Dashboard, Attendance, Grading, Materials, Leave, Research, Notifications)
+ * now has a real component; {@link FeaturePlaceholderComponent} remains only for the wildcard
+ * fallback route.
  */
 export const routes: Routes = [
   {
@@ -42,11 +43,33 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/attendance/attendance.component').then((m) => m.AttendanceComponent),
       },
-      { path: 'grading', loadComponent: placeholder, data: { label: 'Grading' } },
-      { path: 'materials', loadComponent: placeholder, data: { label: 'Course materials' } },
-      { path: 'leave', loadComponent: placeholder, data: { label: 'Leave' } },
-      { path: 'research', loadComponent: placeholder, data: { label: 'Research profile' } },
-      { path: 'notifications', loadComponent: placeholder, data: { label: 'Notifications' } },
+      {
+        path: 'grading',
+        loadComponent: () =>
+          import('./features/grading/grading.component').then((m) => m.GradingComponent),
+      },
+      {
+        path: 'materials',
+        loadComponent: () =>
+          import('./features/materials/materials.component').then((m) => m.MaterialsComponent),
+      },
+      {
+        path: 'leave',
+        loadComponent: () =>
+          import('./features/leave/leave.component').then((m) => m.LeaveComponent),
+      },
+      {
+        path: 'research',
+        loadComponent: () =>
+          import('./features/research/research.component').then((m) => m.ResearchComponent),
+      },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notification-center.component').then(
+            (m) => m.NotificationCenterComponent,
+          ),
+      },
       { path: '**', loadComponent: placeholder, data: { label: 'This page' } },
     ],
   },

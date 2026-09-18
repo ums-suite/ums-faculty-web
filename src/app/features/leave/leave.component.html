@@ -1,0 +1,74 @@
+<div class="leave-page">
+  <h1>{{ 'leave.title' | translate }}</h1>
+
+  <section class="leave-page__balance">
+    <p class="leave-page__notice">{{ 'leave.balance.unavailable' | translate }}</p>
+  </section>
+
+  <section class="leave-page__form">
+    <h2>{{ 'leave.form.title' | translate }}</h2>
+    <ums-date-range-picker
+      [label]="'leave.form.dateRange' | translate"
+      [start]="dateRange().start"
+      [end]="dateRange().end"
+      (rangeChange)="dateRange.set($event)"
+    />
+    <ums-textarea
+      [rows]="3"
+      [value]="reason()"
+      (valueChange)="reason.set($event)"
+      [placeholder]="'leave.form.reasonPlaceholder' | translate"
+    />
+    <ums-file-upload
+      [files]="attachmentAsUploadable()"
+      [multiple]="false"
+      [hint]="'leave.form.attachmentHint' | translate"
+      (filesSelected)="onFileSelected($event)"
+      (retryRequested)="onRetryAttachment()"
+      (removeRequested)="onDismissAttachment()"
+    />
+    <ums-button variant="primary" [disabled]="!canSubmit()" (click)="onSubmit()">{{
+      'leave.form.submit' | translate
+    }}</ums-button>
+  </section>
+
+  @if (store.error(); as errorKey) {
+    <p class="leave-page__error">{{ errorKey | translate }}</p>
+  }
+
+  <section class="leave-page__history">
+    <h2>{{ 'leave.history.title' | translate }}</h2>
+    @if (store.leaveRequests().length === 0) {
+      <ums-empty-state
+        [title]="'leave.history.empty.title' | translate"
+        [description]="'leave.history.empty.description' | translate"
+      />
+    } @else {
+      @for (leaveRequest of store.leaveRequests(); track leaveRequest.id) {
+        <article class="leave-page__item">
+          <div class="leave-page__item-header">
+            <span>{{ leaveRequest.startDate }} &ndash; {{ leaveRequest.endDate }}</span>
+            <ums-badge [variant]="statusBadgeVariant(leaveRequest.status)">{{
+              'leave.status.' + leaveRequest.status | translate
+            }}</ums-badge>
+          </div>
+          <p class="leave-page__item-reason">{{ leaveRequest.localizedReason }}</p>
+
+          @if (overlapsFor(leaveRequest.id)) {
+            <p class="leave-page__overlap-warning">{{ 'leave.overlap.warning' | translate }}</p>
+          }
+
+          @if (chainSteps(leaveRequest); as chain) {
+            <ums-stepper [steps]="chain.steps" [currentIndex]="chain.currentIndex" />
+          }
+
+          @if (isPending(leaveRequest)) {
+            <ums-button variant="ghost" size="sm" (click)="onCancel(leaveRequest)">{{
+              'leave.actions.cancel' | translate
+            }}</ums-button>
+          }
+        </article>
+      }
+    }
+  </section>
+</div>

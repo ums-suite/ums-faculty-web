@@ -1,0 +1,79 @@
+<div
+  class="grade-entry-table"
+  role="table"
+  [attr.aria-label]="'grading.table.ariaLabel' | translate"
+>
+  <div class="grade-entry-table__row grade-entry-table__row--head" role="row">
+    <span class="grade-entry-table__cell grade-entry-table__cell--student" role="columnheader">{{
+      'grading.table.student' | translate
+    }}</span>
+    @for (assessment of assessments(); track assessment.assessmentId) {
+      <span class="grade-entry-table__cell grade-entry-table__cell--score" role="columnheader">
+        {{ assessment.name }}
+        <span class="grade-entry-table__weight">({{ assessment.weight * 100 }}%)</span>
+      </span>
+    }
+    <span class="grade-entry-table__cell grade-entry-table__cell--total" role="columnheader">{{
+      'grading.table.total' | translate
+    }}</span>
+    <span
+      class="grade-entry-table__cell grade-entry-table__cell--actions"
+      role="columnheader"
+    ></span>
+  </div>
+
+  @for (row of rows(); track row.enrollmentId) {
+    <div class="grade-entry-table__row" role="row">
+      <span class="grade-entry-table__cell grade-entry-table__cell--student" role="cell">
+        <span class="grade-entry-table__name">{{ row.name }}</span>
+        <span class="grade-entry-table__student-id">{{ row.studentId }}</span>
+      </span>
+
+      @for (assessment of assessments(); track assessment.assessmentId) {
+        <span class="grade-entry-table__cell grade-entry-table__cell--score" role="cell">
+          <ums-input
+            type="number"
+            size="sm"
+            [min]="0"
+            [max]="100"
+            [disabled]="!editable()"
+            [invalid]="!!row.cells[assessment.assessmentId]?.error"
+            [value]="cellValue(row, assessment.assessmentId)"
+            (valueChange)="onCellInput(row.enrollmentId, assessment.assessmentId, $event)"
+          />
+          @if (row.cells[assessment.assessmentId]?.error; as errorKey) {
+            <span class="grade-entry-table__cell-error">{{ errorKey | translate }}</span>
+          }
+        </span>
+      }
+
+      <span class="grade-entry-table__cell grade-entry-table__cell--total" role="cell">
+        @if (previews().get(row.enrollmentId); as preview) {
+          <ums-badge variant="info"
+            >{{ preview.percentage }}% &middot; {{ preview.letterGrade }}</ums-badge
+          >
+        } @else {
+          <span class="grade-entry-table__cell-empty">&mdash;</span>
+        }
+      </span>
+
+      <span class="grade-entry-table__cell grade-entry-table__cell--actions" role="cell">
+        @if (row.submitError) {
+          <span class="grade-entry-table__row-error">{{ row.submitError | translate }}</span>
+        }
+        @if (editable()) {
+          <ums-button variant="ghost" size="sm" (click)="submitRow.emit(row.enrollmentId)">{{
+            'grading.table.save' | translate
+          }}</ums-button>
+        } @else if (canRequestCorrection() && row.gradeId) {
+          <ums-button
+            variant="ghost"
+            size="sm"
+            (click)="requestCorrection.emit(row.enrollmentId)"
+            >{{ 'grading.correction.request' | translate }}</ums-button
+          >
+        }
+      </span>
+    </div>
+  }
+</div>

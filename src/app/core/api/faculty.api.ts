@@ -2,7 +2,19 @@ import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProvisionalModuleApiBase } from '../http/provisional-module-api.base';
-import type { CourseAssignmentDto, FacultyMemberDto, FacultyMemberListPage } from './faculty.types';
+import type {
+  AttachSupportingDocumentRequest,
+  CourseAssignmentDto,
+  FacultyMemberDto,
+  FacultyMemberListPage,
+  LeaveRequestDto,
+  LeaveRequestListPage,
+  RejectLeaveRequestRequest,
+  ResearchProfileDto,
+  SubmitLeaveRequestRequest,
+  UpdateResearchProfileRequest,
+  VersionedRequestBody,
+} from './faculty.types';
 
 /**
  * Interim client for `Faculty` module endpoints (FWEB-5). Each method's own doc comment names the
@@ -59,6 +71,110 @@ export class FacultyApi extends ProvisionalModuleApiBase {
     const params = new HttpParams().set('facultyMemberId', facultyMemberId);
     return this.normalizeErrors(
       this.http.get<CourseAssignmentDto[]>(this.apiUrl('faculty/course-assignments'), { params }),
+    );
+  }
+
+  /** `GET /api/v1/faculty/leave-requests?facultyMemberId=&skip=&take=` (confirmed, `LeaveRequestEndpoints.cs`) -- FWEB-25's retained leave-history list (approved/rejected/cancelled, never pruned to only the pending one). */
+  listLeaveRequests(
+    facultyMemberId: string,
+    skip = 0,
+    take = 50,
+  ): Observable<LeaveRequestListPage> {
+    const params = new HttpParams()
+      .set('facultyMemberId', facultyMemberId)
+      .set('skip', skip)
+      .set('take', take);
+    return this.normalizeErrors(
+      this.http.get<LeaveRequestListPage>(this.apiUrl('faculty/leave-requests'), { params }),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests` (confirmed, `faculty.leave.create`) -- FWEB-24's submission. Routing (invariant §8.5) is decided entirely server-side. */
+  submitLeaveRequest(request: SubmitLeaveRequestRequest): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(this.apiUrl('faculty/leave-requests'), request),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests/{id}/cancel` (confirmed) -- FWEB-25's "cancel a still-pending request" (Draft/Submitted/DeptHeadApproved only, enforced server-side). */
+  cancelLeaveRequest(id: string, body: VersionedRequestBody): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(this.apiUrl(`faculty/leave-requests/${id}/cancel`), body),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests/{id}/supporting-document` (confirmed) -- links an already-uploaded-and-confirmed Documents artifact to this LeaveRequest. */
+  attachSupportingDocument(
+    id: string,
+    body: AttachSupportingDocumentRequest,
+  ): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(
+        this.apiUrl(`faculty/leave-requests/${id}/supporting-document`),
+        body,
+      ),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests/{id}/approve/department-head` (confirmed, `faculty.leave.approve.department`) -- out of this app's own UI scope per FWEB-24..26's ticket text (no Department-Head-approves-OTHERS'-leave screen named), exposed here for completeness/future use. */
+  approveByDepartmentHead(id: string, body: VersionedRequestBody): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(
+        this.apiUrl(`faculty/leave-requests/${id}/approve/department-head`),
+        body,
+      ),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests/{id}/approve/authority` (confirmed, `faculty.leave.approve.authority`). */
+  approveByAuthority(id: string, body: VersionedRequestBody): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(
+        this.apiUrl(`faculty/leave-requests/${id}/approve/authority`),
+        body,
+      ),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests/{id}/reject/department-head` (confirmed). */
+  rejectByDepartmentHead(id: string, body: RejectLeaveRequestRequest): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(
+        this.apiUrl(`faculty/leave-requests/${id}/reject/department-head`),
+        body,
+      ),
+    );
+  }
+
+  /** `POST /api/v1/faculty/leave-requests/{id}/reject/authority` (confirmed). */
+  rejectByAuthority(id: string, body: RejectLeaveRequestRequest): Observable<LeaveRequestDto> {
+    return this.normalizeErrors(
+      this.http.post<LeaveRequestDto>(
+        this.apiUrl(`faculty/leave-requests/${id}/reject/authority`),
+        body,
+      ),
+    );
+  }
+
+  /** `GET /api/v1/faculty/members/{facultyMemberId}/research-profile` (confirmed, `AllowAnonymous`) -- the SAME query `ums-public-web`'s faculty directory reads (requirement-spec.md §3.6). */
+  getResearchProfile(facultyMemberId: string): Observable<ResearchProfileDto> {
+    return this.normalizeErrors(
+      this.http.get<ResearchProfileDto>(
+        this.apiUrl(`faculty/members/${facultyMemberId}/research-profile`),
+      ),
+    );
+  }
+
+  /** `PUT /api/v1/faculty/members/{facultyMemberId}/research-profile` (confirmed, `faculty.research.publish` for the owning FacultyMember) -- REPLACES the entire publications list; see `faculty.types.ts`'s `PublicationDto` doc for the confirmed no-per-entry-visibility gap this implies. */
+  updateResearchProfile(
+    facultyMemberId: string,
+    request: UpdateResearchProfileRequest,
+  ): Observable<ResearchProfileDto> {
+    return this.normalizeErrors(
+      this.http.put<ResearchProfileDto>(
+        this.apiUrl(`faculty/members/${facultyMemberId}/research-profile`),
+        request,
+      ),
     );
   }
 }

@@ -92,4 +92,65 @@ describe('AcademicApi', () => {
       { status: 409, statusText: 'Conflict' },
     );
   });
+
+  it('submits a grade via POST /academic/grades', () => {
+    const request = { enrollmentId: 'enr-1', scores: [{ assessmentId: 'a-1', score: 80 }] };
+    api.submitGrade(request).subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/grades`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(request);
+    req.flush({
+      id: 'g-1',
+      enrollmentId: 'enr-1',
+      calculatedScore: 80,
+      letterGrade: 'A',
+      scores: [],
+      submittedAt: 't',
+    });
+  });
+
+  it('submits a correction via POST /academic/grades/{id}/correct', () => {
+    const request = { scores: [{ assessmentId: 'a-1', score: 85 }], reason: 'typo fix' };
+    api.correctGrade('g-1', request).subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/grades/g-1/correct`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(request);
+    req.flush({});
+  });
+
+  it('locks a result batch via POST /academic/results/{id}/lock', () => {
+    api.lockResultBatch('off-1').subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/results/off-1/lock`);
+    expect(req.request.method).toBe('POST');
+    req.flush({});
+  });
+
+  it('rejects a result batch via POST /academic/results/{id}/reject', () => {
+    api.rejectResultBatch('off-1', { reason: 'bad scores' }).subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/results/off-1/reject`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({ reason: 'bad scores' });
+    req.flush({});
+  });
+
+  it('approves a result batch via POST /academic/results/{id}/approve', () => {
+    api.approveResultBatch('off-1').subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/results/off-1/approve`);
+    expect(req.request.method).toBe('POST');
+    req.flush({});
+  });
+
+  it('publishes a result batch via POST /academic/results/{id}/publish', () => {
+    api.publishResultBatch('off-1').subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/results/off-1/publish`);
+    expect(req.request.method).toBe('POST');
+    req.flush({});
+  });
+
+  it('archives a result batch via POST /academic/results/{id}/archive', () => {
+    api.archiveResultBatch('off-1').subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/academic/results/off-1/archive`);
+    expect(req.request.method).toBe('POST');
+    req.flush({});
+  });
 });
