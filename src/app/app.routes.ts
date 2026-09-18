@@ -53,7 +53,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/materials/materials.component').then((m) => m.MaterialsComponent),
       },
-      { path: 'leave', loadComponent: placeholder, data: { label: 'Leave' } },
+      {
+        path: 'leave',
+        loadComponent: () =>
+          import('./features/leave/leave.component').then((m) => m.LeaveComponent),
+      },
       { path: 'research', loadComponent: placeholder, data: { label: 'Research profile' } },
       { path: 'notifications', loadComponent: placeholder, data: { label: 'Notifications' } },
       { path: '**', loadComponent: placeholder, data: { label: 'This page' } },
