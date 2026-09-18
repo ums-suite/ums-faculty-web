@@ -142,4 +142,20 @@ describe('FacultyApi', () => {
     expect(req.request.method).toBe('POST');
     req.flush({});
   });
+
+  it('fetches a research profile by facultyMemberId', () => {
+    api.getResearchProfile('fac-1').subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/faculty/members/fac-1/research-profile`);
+    expect(req.request.method).toBe('GET');
+    req.flush({});
+  });
+
+  it('updates a research profile via PUT', () => {
+    const request = { publications: [], ongoingResearch: null, grants: null, version: 1 };
+    api.updateResearchProfile('fac-1', request).subscribe();
+    const req = httpMock.expectOne(`${baseUrl}/api/v1/faculty/members/fac-1/research-profile`);
+    expect(req.request.method).toBe('PUT');
+    expect(req.request.body).toEqual(request);
+    req.flush({});
+  });
 });

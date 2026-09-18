@@ -1,0 +1,98 @@
+<div class="research-page">
+  <h1>{{ 'research.title' | translate }}</h1>
+  <p class="research-page__subtitle">{{ 'research.subtitle' | translate }}</p>
+
+  <section class="research-page__interests">
+    <h2>{{ 'research.interests.title' | translate }}</h2>
+    <ums-textarea
+      [rows]="4"
+      [value]="store.ongoingResearch()"
+      (valueChange)="store.setOngoingResearch($event)"
+      [placeholder]="'research.interests.placeholder' | translate"
+    />
+    <h2>{{ 'research.grants.title' | translate }}</h2>
+    <ums-textarea
+      [rows]="3"
+      [value]="store.grants()"
+      (valueChange)="store.setGrants($event)"
+      [placeholder]="'research.grants.placeholder' | translate"
+    />
+  </section>
+
+  <section class="research-page__publications">
+    <h2>{{ 'research.publications.title' | translate }}</h2>
+
+    @if (store.publications().length === 0) {
+      <ums-empty-state
+        [title]="'research.publications.empty.title' | translate"
+        [description]="'research.publications.empty.description' | translate"
+      />
+    } @else {
+      @for (publication of store.publications(); track publication.localId) {
+        <article class="research-page__publication">
+          <div class="research-page__publication-header">
+            <h3>{{ publication.title }}</h3>
+            <ums-badge [variant]="publication.visibility === 'public' ? 'success' : 'neutral'">{{
+              'research.visibility.' + publication.visibility | translate
+            }}</ums-badge>
+          </div>
+          <p class="research-page__publication-meta">
+            {{ publication.venue }} &middot; {{ publication.year }}
+          </p>
+          <div class="research-page__publication-actions">
+            <ums-button
+              variant="ghost"
+              size="sm"
+              (click)="onToggleVisibility(publication.localId)"
+              >{{
+                (publication.visibility === 'public'
+                  ? 'research.actions.makeDraft'
+                  : 'research.actions.makePublic'
+                ) | translate
+              }}</ums-button
+            >
+            <ums-button variant="ghost" size="sm" (click)="onRemove(publication.localId)">{{
+              'research.actions.remove' | translate
+            }}</ums-button>
+          </div>
+        </article>
+      }
+    }
+
+    <div class="research-page__add">
+      <h3>{{ 'research.add.title' | translate }}</h3>
+      <ums-input
+        [value]="newTitle()"
+        (valueChange)="newTitle.set($event)"
+        [placeholder]="'research.add.titlePlaceholder' | translate"
+      />
+      <ums-input
+        [value]="newVenue()"
+        (valueChange)="newVenue.set($event)"
+        [placeholder]="'research.add.venuePlaceholder' | translate"
+      />
+      <ums-input
+        type="number"
+        [value]="newYear()"
+        (valueChange)="newYear.set($event)"
+        [placeholder]="'research.add.yearPlaceholder' | translate"
+      />
+      <ums-input
+        [value]="newUrl()"
+        (valueChange)="newUrl.set($event)"
+        [placeholder]="'research.add.urlPlaceholder' | translate"
+      />
+      <ums-button variant="secondary" (click)="onAddPublication()">{{
+        'research.add.submit' | translate
+      }}</ums-button>
+    </div>
+  </section>
+
+  @if (store.error(); as errorKey) {
+    <p class="research-page__error">{{ errorKey | translate }}</p>
+  }
+
+  <ums-button variant="primary" [loading]="store.isSaving()" (click)="onSave()">{{
+    'research.actions.save' | translate
+  }}</ums-button>
+</div>

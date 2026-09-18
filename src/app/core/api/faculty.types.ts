@@ -120,3 +120,40 @@ export interface AttachSupportingDocumentRequest {
   readonly generatedDocumentId: string;
   readonly version: number;
 }
+
+/**
+ * `ResearchProfile` wire DTOs (FWEB-27/FWEB-28), verified against
+ * `ums-core/src/UMS.Modules/Faculty/UMS.Modules.Faculty.Application/ResearchProfiles/*.cs`.
+ *
+ * **Confirmed backend gap: `PublicationDto` has no per-entry visibility/draft field at all** --
+ * `ResearchProfile.Update` unconditionally REPLACES the entire publications list with whatever is
+ * PUT, and the GET is `AllowAnonymous` (the exact same list `ums-public-web`'s faculty directory
+ * reads). There is no server-side concept of "staged, not yet public" for one entry. FWEB-28's
+ * resolution (`ResearchStore`'s own class doc carries the mechanism): a draft-visibility entry is
+ * simply never included in the PUT body until explicitly toggled to public and saved -- since the
+ * public GET reflects only what was last PUT, an entry that was never sent is, by construction,
+ * never visible on the public directory mid-edit. Draft entries persist to this browser's
+ * `localStorage` (never the server) so they survive a reload on the same device.
+ */
+export interface PublicationDto {
+  readonly title: string;
+  readonly venue: string;
+  readonly year: number;
+  readonly url: string | null;
+}
+
+export interface ResearchProfileDto {
+  readonly id: string;
+  readonly facultyMemberId: string;
+  readonly publications: readonly PublicationDto[];
+  readonly ongoingResearch: string | null;
+  readonly grants: string | null;
+  readonly version: number;
+}
+
+export interface UpdateResearchProfileRequest {
+  readonly publications: readonly PublicationDto[];
+  readonly ongoingResearch: string | null;
+  readonly grants: string | null;
+  readonly version: number;
+}

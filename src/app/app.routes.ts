@@ -58,7 +58,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/leave/leave.component').then((m) => m.LeaveComponent),
       },
-      { path: 'research', loadComponent: placeholder, data: { label: 'Research profile' } },
+      {
+        path: 'research',
+        loadComponent: () =>
+          import('./features/research/research.component').then((m) => m.ResearchComponent),
+      },
       { path: 'notifications', loadComponent: placeholder, data: { label: 'Notifications' } },
       { path: '**', loadComponent: placeholder, data: { label: 'This page' } },
     ],

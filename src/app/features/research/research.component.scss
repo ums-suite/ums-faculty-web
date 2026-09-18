@@ -1,0 +1,67 @@
+.research-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-inline-size: 40rem;
+}
+
+.research-page__subtitle {
+  color: var(--color-text-muted);
+}
+
+.research-page__interests {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.research-page__publications {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.research-page__publication {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.research-page__publication-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+
+  h3 {
+    margin: 0;
+    font-family: var(--font-serif, inherit);
+  }
+}
+
+.research-page__publication-meta {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.research-page__publication-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.research-page__add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+
+.research-page__error {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+}

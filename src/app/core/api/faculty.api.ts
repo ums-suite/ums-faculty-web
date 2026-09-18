@@ -10,7 +10,9 @@ import type {
   LeaveRequestDto,
   LeaveRequestListPage,
   RejectLeaveRequestRequest,
+  ResearchProfileDto,
   SubmitLeaveRequestRequest,
+  UpdateResearchProfileRequest,
   VersionedRequestBody,
 } from './faculty.types';
 
@@ -150,6 +152,28 @@ export class FacultyApi extends ProvisionalModuleApiBase {
       this.http.post<LeaveRequestDto>(
         this.apiUrl(`faculty/leave-requests/${id}/reject/authority`),
         body,
+      ),
+    );
+  }
+
+  /** `GET /api/v1/faculty/members/{facultyMemberId}/research-profile` (confirmed, `AllowAnonymous`) -- the SAME query `ums-public-web`'s faculty directory reads (requirement-spec.md §3.6). */
+  getResearchProfile(facultyMemberId: string): Observable<ResearchProfileDto> {
+    return this.normalizeErrors(
+      this.http.get<ResearchProfileDto>(
+        this.apiUrl(`faculty/members/${facultyMemberId}/research-profile`),
+      ),
+    );
+  }
+
+  /** `PUT /api/v1/faculty/members/{facultyMemberId}/research-profile` (confirmed, `faculty.research.publish` for the owning FacultyMember) -- REPLACES the entire publications list; see `faculty.types.ts`'s `PublicationDto` doc for the confirmed no-per-entry-visibility gap this implies. */
+  updateResearchProfile(
+    facultyMemberId: string,
+    request: UpdateResearchProfileRequest,
+  ): Observable<ResearchProfileDto> {
+    return this.normalizeErrors(
+      this.http.put<ResearchProfileDto>(
+        this.apiUrl(`faculty/members/${facultyMemberId}/research-profile`),
+        request,
       ),
     );
   }
