@@ -1,0 +1,94 @@
+<div class="materials-page">
+  <h1>{{ 'materials.title' | translate }}</h1>
+
+  <section class="materials-page__uploader">
+    <div class="materials-page__upload-fields">
+      <ums-input
+        [value]="moduleGroup()"
+        (valueChange)="moduleGroup.set($event)"
+        [placeholder]="'materials.upload.moduleGroup' | translate"
+      />
+      <ums-input
+        [value]="title()"
+        (valueChange)="title.set($event)"
+        [placeholder]="'materials.upload.titlePlaceholder' | translate"
+      />
+      <ums-select
+        [options]="replaceOptions()"
+        [value]="replacesMaterialId()"
+        (valueChange)="replacesMaterialId.set($event)"
+      />
+      <ums-date-picker
+        [label]="'materials.upload.scheduleLabel' | translate"
+        [value]="scheduledDate()"
+        (valueChange)="scheduledDate.set($event)"
+      />
+    </div>
+
+    <ums-file-upload
+      [files]="uploadFiles()"
+      [hint]="'materials.upload.hint' | translate"
+      [multiple]="true"
+      (filesSelected)="onFilesSelected($event)"
+      (retryRequested)="onRetry($event)"
+      (removeRequested)="onRemove($event)"
+    />
+  </section>
+
+  @if (store.scheduledUploads().length > 0) {
+    <section class="materials-page__scheduled">
+      <h2>{{ 'materials.scheduled.title' | translate }}</h2>
+      <ul>
+        @for (upload of store.scheduledUploads(); track upload.localId) {
+          <li>
+            {{ upload.title }} &mdash;
+            {{ 'materials.scheduled.releaseOn' | translate: { date: upload.scheduledFor ?? '' } }}
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  @if (store.materials().length === 0) {
+    <ums-empty-state
+      [title]="'materials.empty.title' | translate"
+      [description]="'materials.empty.description' | translate"
+    />
+  } @else {
+    <section class="materials-page__list">
+      @for (material of store.materials(); track material.id) {
+        <article class="materials-page__item">
+          <div class="materials-page__item-header">
+            <h3>{{ material.title }}</h3>
+            <ums-badge variant="neutral">{{ material.moduleGroup }}</ums-badge>
+          </div>
+          @if (material.currentVersion) {
+            <p class="materials-page__item-meta">
+              {{
+                'materials.item.currentVersion'
+                  | translate: { version: material.currentVersion.versionNumber }
+              }}
+            </p>
+          }
+          @if (material.versions.length > 1) {
+            <details class="materials-page__history">
+              <summary>{{ 'materials.item.history' | translate }}</summary>
+              <ul>
+                @for (version of material.versions; track version.id) {
+                  <li>
+                    {{ 'materials.item.version' | translate: { number: version.versionNumber } }}
+                    @if (version.isCurrent) {
+                      <ums-badge variant="success" size="sm">{{
+                        'materials.item.current' | translate
+                      }}</ums-badge>
+                    }
+                  </li>
+                }
+              </ul>
+            </details>
+          }
+        </article>
+      }
+    </section>
+  }
+</div>

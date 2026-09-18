@@ -48,7 +48,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/grading/grading.component').then((m) => m.GradingComponent),
       },
-      { path: 'materials', loadComponent: placeholder, data: { label: 'Course materials' } },
+      {
+        path: 'materials',
+        loadComponent: () =>
+          import('./features/materials/materials.component').then((m) => m.MaterialsComponent),
+      },
       { path: 'leave', loadComponent: placeholder, data: { label: 'Leave' } },
       { path: 'research', loadComponent: placeholder, data: { label: 'Research profile' } },
       { path: 'notifications', loadComponent: placeholder, data: { label: 'Notifications' } },
