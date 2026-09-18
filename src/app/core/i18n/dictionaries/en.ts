@@ -248,6 +248,16 @@ export const EN_TRANSLATIONS: TranslationDictionary = {
   'research.error.loadFailed': 'We could not load your research profile. Please try again.',
   'research.error.saveFailed': 'This profile could not be saved. Please try again.',
 
+  'notifications.title': 'Notifications',
+  'notifications.markAllRead': 'Mark all read',
+  'notifications.markRead': 'Mark read',
+  'notifications.unread': 'Unread',
+  'notifications.empty.title': 'Nothing here yet',
+  'notifications.empty.description':
+    'Leave decisions, review-status changes, and low-attendance flags will appear here.',
+  'notifications.error.loadFailed': 'We could not load your notifications. Please try again.',
+  'notifications.error.markReadFailed': 'This could not be marked as read. Please try again.',
+
   'common.retry': 'Retry',
   'common.cancel': 'Cancel',
   'common.close': 'Close',

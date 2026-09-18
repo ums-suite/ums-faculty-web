@@ -240,6 +240,16 @@ export const BN_TRANSLATIONS: TranslationDictionary = {
   'research.error.loadFailed': 'আপনার গবেষণা প্রোফাইল লোড করা যায়নি। আবার চেষ্টা করুন।',
   'research.error.saveFailed': 'এই প্রোফাইল সংরক্ষণ করা যায়নি। আবার চেষ্টা করুন।',
 
+  'notifications.title': 'বিজ্ঞপ্তি',
+  'notifications.markAllRead': 'সব পঠিত করুন',
+  'notifications.markRead': 'পঠিত করুন',
+  'notifications.unread': 'অপঠিত',
+  'notifications.empty.title': 'এখনো কিছু নেই',
+  'notifications.empty.description':
+    'ছুটির সিদ্ধান্ত, পর্যালোচনা-অবস্থা পরিবর্তন এবং কম উপস্থিতির ফ্ল্যাগ এখানে দেখা যাবে।',
+  'notifications.error.loadFailed': 'আপনার বিজ্ঞপ্তি লোড করা যায়নি। আবার চেষ্টা করুন।',
+  'notifications.error.markReadFailed': 'এটি পঠিত হিসেবে চিহ্নিত করা যায়নি। আবার চেষ্টা করুন।',
+
   'common.retry': 'আবার চেষ্টা করুন',
   'common.cancel': 'বাতিল',
   'common.close': 'বন্ধ করুন',

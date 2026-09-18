@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
@@ -43,7 +43,7 @@ interface FacultyNavItem extends AppShellNavItem {
   templateUrl: './app-shell.component.html',
   styleUrl: './app-shell.component.scss',
 })
-export class AppShellComponent {
+export class AppShellComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   private readonly attendanceCacheClear = inject(AttendanceCacheClearService);
@@ -87,6 +87,15 @@ export class AppShellComponent {
     return items.map((item) => ({ ...item, href: item.path, active: url.startsWith(item.path) }));
   });
 
+  /**
+   * FWEB-29 note: the notification-badge poll (FWEB-8's `NotificationChannelService`) was wired
+   * but never actually started anywhere in the app -- this is that missing call site, made here
+   * since the shell exists for the entire authenticated session. Torn down on {@link logout}.
+   */
+  ngOnInit(): void {
+    this.globalStore.connectNotifications();
+  }
+
   protected onNavItemClick(item: AppShellNavItem): void {
     const path = (item as FacultyNavItem).path ?? item.href;
     if (path) {
@@ -113,6 +122,7 @@ export class AppShellComponent {
    */
   protected logout(): void {
     void this.attendanceCacheClear.clear();
+    this.globalStore.disconnectNotifications();
     this.authService.logout().subscribe({
       complete: () => void this.router.navigateByUrl('/login'),
       error: () => void this.router.navigateByUrl('/login'),

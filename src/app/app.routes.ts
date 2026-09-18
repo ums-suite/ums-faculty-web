@@ -63,7 +63,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/research/research.component').then((m) => m.ResearchComponent),
       },
-      { path: 'notifications', loadComponent: placeholder, data: { label: 'Notifications' } },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notifications/notification-center.component').then(
+            (m) => m.NotificationCenterComponent,
+          ),
+      },
       { path: '**', loadComponent: placeholder, data: { label: 'This page' } },
     ],
   },
