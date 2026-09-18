@@ -34,3 +34,14 @@ logs
 # System files
 .DS_Store
 Thumbs.db
+
+# Angular build cache
+/.angular/cache
+
+# Coverage
+/coverage
+
+# NOTE: /vendor/*.tgz (packed @ums/shared and @ums/design-system tarballs) is intentionally
+# NOT ignored here -- package.json pins them as file: deps (see README "Local package
+# consumption"), so they must be committed for `npm ci` to succeed until the platform's
+# private npm registry exists.
