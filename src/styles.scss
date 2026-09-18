@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+// Global styles (FWEB-2, requirement-spec.md §2 Design system row): every visual value flows
+// through @ums/design-system's tokens; this app never hand-rolls its own color/type/spacing
+// values. ADR-0017 mandates one shared token set/visual language across all six apps, so this
+// app's own "calmer, cooler palette than the student app" mandate (§7) is realized as a *usage*
+// discipline layered on the SAME shared tokens, not a forked palette:
+//   - `data-register="operational"` (set on <html> by `App`, see `app.ts`) opts into the design
+//     system's own operational typography register (a plainer, denser heading treatment than the
+//     default marketing register -- confirmed against @ums/design-system's own tokens.css, which
+//     names ums-faculty-web/ums-admin-web explicitly for this attribute).
+//   - color is spent almost entirely on the STATUS palette (success/warning/danger/info via
+//     UmsBadgeComponent) rather than the warm --color-secondary (gold) CTA/celebration usage the
+//     student app leans on for marketing-adjacent screens -- a restrained, deliberate choice this
+//     app's own component styles follow, not a new token.
+
+// Hand-authored partials: Google Fonts loading, a minimal reset, and token-backed utility
+// classes. @use rules must precede all other rules in Sass.
+@use '@ums/design-system/styles/index' as ums;
+
+// tokens.css: token-driven CSS custom properties (light/dark, both @media(prefers-color-scheme)
+// and [data-theme] override) -- loaded as a plain stylesheet, never @use'd into the Sass module
+// graph (matches @ums/design-system's own README consumption instructions).
+// KNOWN PACKAGING GAP (matches `ums-student-web`/`ums-admission-web`'s identical, already-flagged
+// workaround): the published dist package.json's "exports" map only declares "." and
+// "./package.json", so the bare specifier the README documents fails to resolve under esbuild's
+// Node "exports" enforcement. A relative node_modules path sidesteps package-export resolution
+// entirely as a stopgap; swap back to the bare specifier once @ums/design-system adds a
+// "./styles/*" entry.
+@import '../node_modules/@ums/design-system/styles/tokens.css';
+
+html {
+  block-size: 100%;
+}
+
+body {
+  block-size: 100%;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+}
