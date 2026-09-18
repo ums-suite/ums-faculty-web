@@ -1,0 +1,49 @@
+# Mirrors this repo's own .gitignore, tuned for the Docker BUILD CONTEXT rather than git: dist/
+# and node_modules/ are excluded here too even though for a different reason than git (they're
+# regenerated fresh inside the image by `npm ci`/`npm run build` in the Dockerfile's build stage -
+# copying either from the host would bloat the build context for nothing and risks a
+# host/container platform mismatch in node_modules' native deps).
+
+# Compiled output (regenerated in-container by the Dockerfile's build stage)
+dist
+tmp
+out-tsc
+bazel-out
+
+# Node (regenerated in-container by `npm ci`)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# IDEs and editors
+.idea
+.vscode
+.project
+.classpath
+*.launch
+.settings
+
+# Environment (never bake secrets into an image layer)
+.env
+.env.*
+!.env.example
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Angular build cache / test tooling
+.angular
+coverage
+
+# VCS/CI - irrelevant inside the image and no reason to widen the build context with them
+.git
+.github
+
+# NOTE: vendor/*.tgz is deliberately NOT excluded here (unlike node_modules/dist above) - the
+# Dockerfile's build stage needs it present to satisfy package.json's `file:vendor/...tgz`
+# dependencies during `npm ci`, same reason it isn't gitignored either (see .gitignore's own note).
