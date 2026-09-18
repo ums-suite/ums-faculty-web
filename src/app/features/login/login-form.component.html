@@ -1,0 +1,70 @@
+<form class="login-form" (ngSubmit)="onSubmit()">
+  <h1>{{ 'login.title' | translate }}</h1>
+  <p>{{ 'login.subtitle' | translate }}</p>
+
+  <ums-form-field
+    #identifierField="umsFormField"
+    [label]="'login.identifier.label' | translate"
+    [required]="true"
+    [errors]="errors.identifier ? [errors.identifier | translate] : []"
+  >
+    <ums-input
+      [id]="identifierField.controlId()"
+      [ariaDescribedBy]="identifierField.describedBy()"
+      [invalid]="identifierField.hasErrors()"
+      [required]="true"
+      [value]="identifier()"
+      (valueChange)="identifier.set($event)"
+      autocomplete="username"
+    />
+  </ums-form-field>
+
+  <ums-form-field
+    #passwordField="umsFormField"
+    [label]="'login.password.label' | translate"
+    [required]="true"
+    [errors]="errors.password ? [errors.password | translate] : []"
+  >
+    <ums-input
+      type="password"
+      [id]="passwordField.controlId()"
+      [ariaDescribedBy]="passwordField.describedBy()"
+      [invalid]="passwordField.hasErrors()"
+      [required]="true"
+      [value]="password()"
+      (valueChange)="password.set($event)"
+      autocomplete="current-password"
+    />
+  </ums-form-field>
+
+  <fieldset class="login-form__device-trust">
+    <legend>{{ 'login.deviceTrust.question' | translate }}</legend>
+    <p class="login-form__device-trust-hint">{{ 'login.deviceTrust.hint' | translate }}</p>
+    <label>
+      <input
+        type="radio"
+        name="deviceTrust"
+        [checked]="isPersonalDevice()"
+        (change)="isPersonalDevice.set(true)"
+      />
+      {{ 'login.deviceTrust.yes' | translate }}
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="deviceTrust"
+        [checked]="!isPersonalDevice()"
+        (change)="isPersonalDevice.set(false)"
+      />
+      {{ 'login.deviceTrust.no' | translate }}
+    </label>
+  </fieldset>
+
+  @if (serverErrorMessage()) {
+    <p class="login-form__server-error" role="alert">{{ serverErrorMessage() }}</p>
+  }
+
+  <ums-button type="submit" [loading]="submitting()" [disabled]="submitting()" [fullWidth]="true">
+    {{ (submitting() ? 'login.submitting' : 'login.submit') | translate }}
+  </ums-button>
+</form>

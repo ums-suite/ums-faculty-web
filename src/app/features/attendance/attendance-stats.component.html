@@ -1,0 +1,22 @@
+<div class="attendance-stats">
+  <div class="attendance-stats__header">
+    <h2>{{ 'attendance.stats.title' | translate }}</h2>
+    <span class="attendance-stats__as-of">{{ asOfLabel }}</span>
+  </div>
+
+  <ums-data-table
+    [columns]="columns"
+    [rows]="tableRows()"
+    [rowId]="rowId"
+    emptyMessage="No students on this roster yet."
+  />
+
+  <div class="attendance-stats__actions">
+    <ums-button variant="secondary" (click)="exportCsv()">{{
+      'attendance.stats.export.csv' | translate
+    }}</ums-button>
+    <ums-button variant="ghost" [disabled]="true" title="Pending a Documents-module PDF endpoint">{{
+      'attendance.stats.export.pdf' | translate
+    }}</ums-button>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="attendance-page">
+  @if (store.isOffline()) {
+    <ums-offline-banner [message]="'attendance.offline.banner' | translate" />
+  }
+
+  <div class="attendance-page__header">
+    <h1>{{ 'attendance.title' | translate }}</h1>
+    <div class="attendance-page__header-actions">
+      <ums-button variant="secondary" (click)="markAllPresent()">{{
+        'attendance.markAllPresent' | translate
+      }}</ums-button>
+      <ums-button variant="ghost" (click)="toggleStats()">{{
+        'attendance.stats.title' | translate
+      }}</ums-button>
+    </div>
+  </div>
+
+  <div class="attendance-page__tally">
+    <ums-badge variant="success"
+      >{{ 'attendance.tally.present' | translate }}: {{ store.tally().present }}</ums-badge
+    >
+    <ums-badge variant="danger"
+      >{{ 'attendance.tally.absent' | translate }}: {{ store.tally().absent }}</ums-badge
+    >
+    <ums-badge variant="warning"
+      >{{ 'attendance.tally.late' | translate }}: {{ store.tally().late }}</ums-badge
+    >
+    <ums-badge variant="info"
+      >{{ 'attendance.tally.excused' | translate }}: {{ store.tally().excused }}</ums-badge
+    >
+    <ums-badge variant="neutral"
+      >{{ 'attendance.tally.unmarked' | translate }}: {{ store.tally().unmarked }}</ums-badge
+    >
+  </div>
+
+  @if (store.roster().length === 0) {
+    <ums-empty-state
+      title="Roster unavailable"
+      description="ums-core has no endpoint yet to list this course's enrolled students -- a confirmed, flagged backend gap. Marking will work the instant a real roster loads."
+    />
+  } @else {
+    <app-attendance-roster
+      [rows]="store.roster()"
+      (markChange)="onMarkChange($event)"
+      (openHistory)="onOpenHistory($event)"
+      (acknowledgeUpdated)="onAcknowledgeUpdated($event)"
+    />
+  }
+
+  @if (showStats()) {
+    <app-attendance-stats [stats]="store.stats()" [roster]="store.roster()" />
+  }
+
+  <app-attendance-history
+    [studentName]="historyStudentName()"
+    [entries]="historyEntries()"
+    [open]="isHistoryOpen()"
+    (closed)="onCloseHistory()"
+  />
+</div>

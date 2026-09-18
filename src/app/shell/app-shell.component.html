@@ -1,0 +1,48 @@
+<ums-app-shell mode="operational" [navItems]="navItems()" (navItemClick)="onNavItemClick($event)">
+  <span umsAppShellBrand class="app-shell__brand">{{ 'shell.appName' | translate }}</span>
+
+  <div umsAppShellActions class="app-shell__actions">
+    @if (globalStore.unreadNotificationCount() > 0) {
+      <span class="app-shell__notification-badge">
+        <ums-icon-button
+          icon="bell"
+          [label]="'shell.nav.notifications' | translate"
+          variant="ghost"
+        />
+        <ums-badge variant="danger" size="sm">{{
+          globalStore.unreadNotificationCount()
+        }}</ums-badge>
+      </span>
+    } @else {
+      <ums-icon-button
+        icon="bell"
+        [label]="'shell.nav.notifications' | translate"
+        variant="ghost"
+      />
+    }
+
+    <ums-icon-button
+      icon="globe"
+      [label]="'shell.locale.' + globalStore.locale() | translate"
+      variant="ghost"
+      (click)="toggleLocale()"
+    />
+    <ums-icon-button
+      icon="sliders"
+      [label]="'shell.theme.' + globalStore.themeMode() | translate"
+      variant="ghost"
+      (click)="toggleTheme()"
+    />
+    <ums-icon-button
+      icon="sign-out"
+      [label]="'shell.logout' | translate"
+      variant="ghost"
+      (click)="logout()"
+    />
+  </div>
+
+  @if (!connectivity.isOnline()) {
+    <ums-offline-banner [message]="'shell.offline.message' | translate" />
+  }
+  <router-outlet />
+</ums-app-shell>

@@ -1,0 +1,21 @@
+.app-shell__brand {
+  font-weight: var(--type-heading-1-font-weight, 700);
+  color: var(--color-text);
+}
+
+.app-shell__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.app-shell__notification-badge {
+  position: relative;
+  display: inline-flex;
+
+  ums-badge {
+    position: absolute;
+    inset-block-start: -2px;
+    inset-inline-end: -2px;
+  }
+}

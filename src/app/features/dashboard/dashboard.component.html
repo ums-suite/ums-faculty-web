@@ -1,0 +1,90 @@
+<div class="dashboard">
+  <div class="dashboard__header">
+    <h1>{{ 'dashboard.title' | translate }}</h1>
+    <ums-button variant="ghost" size="sm" (click)="refresh()">{{
+      'dashboard.refresh' | translate
+    }}</ums-button>
+  </div>
+
+  @if (store.error()) {
+    <ums-empty-state [title]="'dashboard.error' | translate" />
+  }
+
+  @if (store.isLoading()) {
+    <ums-skeleton variant="rect" />
+  } @else {
+    @if (store.nextClass(); as next) {
+      <ums-card variant="content" class="dashboard__next-class">
+        <h2>{{ 'dashboard.nextClass.title' | translate }}</h2>
+        @if (next.inProgress) {
+          <ums-badge variant="success">{{
+            'dashboard.nextClass.inProgress' | translate
+          }}</ums-badge>
+        } @else {
+          <p>
+            {{
+              'dashboard.nextClass.startsIn' | translate: { minutes: nextClassMinutesLabel() ?? 0 }
+            }}
+          </p>
+        }
+        <ums-button variant="primary" (click)="startAttendance()">{{
+          'dashboard.nextClass.startAttendance' | translate
+        }}</ums-button>
+      </ums-card>
+    } @else {
+      <ums-card variant="content" class="dashboard__next-class">
+        <p>{{ 'dashboard.nextClass.empty' | translate }}</p>
+      </ums-card>
+    }
+
+    <div class="dashboard__strip">
+      <ums-card
+        variant="stat"
+        [statLabel]="
+          'dashboard.teachingLoad.sections'
+            | translate: { count: store.teachingLoad().sectionsCount }
+        "
+        [statValue]="store.teachingLoad().sectionsCount.toString()"
+      />
+      <ums-card
+        variant="stat"
+        [statLabel]="
+          'dashboard.teachingLoad.students'
+            | translate: { count: store.teachingLoad().studentsCount }
+        "
+        [statValue]="store.teachingLoad().studentsCount.toString()"
+      />
+    </div>
+
+    <section class="dashboard__pending-actions">
+      <h2>{{ 'dashboard.pendingActions.title' | translate }}</h2>
+      @if (store.pendingActions().length === 0) {
+        <p>{{ 'dashboard.pendingActions.empty' | translate }}</p>
+      } @else {
+        <ul>
+          @for (action of store.pendingActions(); track action.kind) {
+            <li>{{ action.translationKey | translate: action.params }}</li>
+          }
+        </ul>
+      }
+    </section>
+
+    @if (store.isDepartmentHead()) {
+      <section class="dashboard__semester-summary">
+        <h2>{{ 'dashboard.semesterSummary.title' | translate }}</h2>
+        <p>
+          {{
+            'dashboard.semesterSummary.sections'
+              | translate: { count: store.semesterSummary().sectionsCount }
+          }}
+        </p>
+        <p>
+          {{
+            'dashboard.semesterSummary.students'
+              | translate: { count: store.semesterSummary().studentsCount }
+          }}
+        </p>
+      </section>
+    }
+  }
+</div>
