@@ -1,0 +1,20 @@
+<ums-modal
+  [open]="open()"
+  [title]="'attendance.history.title' | translate: { name: studentName() }"
+  (closed)="closed.emit()"
+>
+  @if (entries().length === 0) {
+    <p>{{ 'attendance.history.empty' | translate }}</p>
+  } @else {
+    <ul class="attendance-history__list">
+      @for (entry of entries(); track entry.sessionDate) {
+        <li class="attendance-history__entry">
+          <span>{{ entry.sessionDate }}</span>
+          <ums-badge [variant]="badgeVariant(entry.status)" size="sm">{{
+            'attendance.status.' + entry.status | translate
+          }}</ums-badge>
+        </li>
+      }
+    </ul>
+  }
+</ums-modal>

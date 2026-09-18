@@ -1,0 +1,67 @@
+<p class="attendance-roster__keyboard-hint">{{ 'attendance.roster.keyboardHint' | translate }}</p>
+
+@if (rows().length === 0) {
+  <p>{{ 'attendance.roster.empty' | translate }}</p>
+} @else {
+  <div class="attendance-roster" role="table">
+    @for (row of rows(); track row.enrollmentId) {
+      <div
+        class="attendance-roster__row"
+        role="row"
+        tabindex="0"
+        [attr.aria-label]="row.name"
+        (keydown)="onRowKeyDown($event, row.enrollmentId)"
+      >
+        <ums-avatar [name]="row.name" [imageUrl]="row.photoUrl" size="sm" />
+
+        <div class="attendance-roster__identity">
+          <span class="attendance-roster__name">{{ row.name }}</span>
+          <span class="attendance-roster__student-id">{{ row.studentId }}</span>
+          @if (!row.mark.explicitlySet) {
+            <ums-badge variant="neutral" size="sm">{{
+              'attendance.roster.newStudent' | translate
+            }}</ums-badge>
+          }
+          @if (row.mark.updatedFromAnotherDevice) {
+            <button
+              type="button"
+              class="attendance-roster__updated-notice"
+              (click)="acknowledgeUpdated.emit(row.enrollmentId)"
+            >
+              {{ 'attendance.updatedElsewhere' | translate: { name: row.name } }}
+            </button>
+          }
+        </div>
+
+        <div class="attendance-roster__control" role="group" [attr.aria-label]="row.name">
+          @for (status of statuses; track status) {
+            <button
+              type="button"
+              class="attendance-roster__status-button"
+              [class.attendance-roster__status-button--active]="row.mark.status === status"
+              [attr.data-status]="status"
+              (click)="onMark(row.enrollmentId, status)"
+            >
+              {{ ('attendance.status.' + status | translate).charAt(0) }}
+            </button>
+          }
+        </div>
+
+        <ums-badge [variant]="badgeVariant(row.mark.status)" size="sm">{{
+          'attendance.status.' + row.mark.status | translate
+        }}</ums-badge>
+
+        <span class="attendance-roster__sync-indicator">{{
+          syncIndicatorKey(row.mark.syncState) | translate
+        }}</span>
+
+        <ums-icon-button
+          icon="clock"
+          [label]="'common.view' | translate"
+          variant="ghost"
+          (click)="openHistory.emit(row.enrollmentId)"
+        />
+      </div>
+    }
+  </div>
+}
